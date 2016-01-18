@@ -4,7 +4,7 @@ TARGET_USES_QCOM_BSP := true
 BOARD_HAVE_QCOM_FM := true
 # Add QC Video Enhancements flag
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
-TARGET_USES_NQ_NFC := false
+TARGET_USES_NQ_NFC := true
 
 #QTIC flag
 -include $(QCPATH)/common/config/qtic-config.mk
@@ -14,7 +14,8 @@ ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
 PRODUCT_COPY_FILES += device/qcom/msm8937_32/media/media_profiles_8937.xml:system/etc/media_profiles.xml \
                       device/qcom/msm8937_32/media/media_profiles_8956.xml:system/etc/media_profiles_8956.xml \
                       device/qcom/msm8937_32/media/media_codecs_8937.xml:system/etc/media_codecs.xml \
-                      device/qcom/msm8937_32/media/media_codecs_8956.xml:system/etc/media_codecs_8956.xml
+                      device/qcom/msm8937_32/media/media_codecs_8956.xml:system/etc/media_codecs_8956.xml \
+                      device/qcom/msm8937_32/media/media_codecs_performance_8937.xml:system/etc/media_codecs_performance.xml
 endif
 
 PRODUCT_COPY_FILES += device/qcom/msm8937_64/whitelistedapps.xml:system/etc/whitelistedapps.xml
