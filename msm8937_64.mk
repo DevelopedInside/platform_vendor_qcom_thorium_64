@@ -9,13 +9,8 @@ TARGET_KERNEL_VERSION := 3.18
 #QTIC flag
 -include $(QCPATH)/common/config/qtic-config.mk
 
-# media_profiles and media_codecs xmls for msm8937
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
-PRODUCT_COPY_FILES += device/qcom/msm8937_32/media/media_profiles_8937.xml:system/etc/media_profiles.xml \
-                      device/qcom/msm8937_32/media/media_profiles_8956.xml:system/etc/media_profiles_8956.xml \
-                      device/qcom/msm8937_32/media/media_codecs_8937.xml:system/etc/media_codecs.xml \
-                      device/qcom/msm8937_32/media/media_codecs_8956.xml:system/etc/media_codecs_8956.xml \
-                      device/qcom/msm8937_32/media/media_codecs_performance_8937.xml:system/etc/media_codecs_performance.xml
+$(call inherit-product-if-exists, hardware/qcom/media/conf_files/config.mk)
 endif
 
 PRODUCT_COPY_FILES += device/qcom/msm8937_64/whitelistedapps.xml:system/etc/whitelistedapps.xml \
