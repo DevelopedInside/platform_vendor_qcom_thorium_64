@@ -235,6 +235,9 @@ ro.emmc_size=16GB
 #force HAL1 for below packages
 camera.hal1.packagelist=com.skype.raider,com.google.android.talk
 
+#In video expect camera time source as monotonic
+media.camera.ts.monotonic=1
+
 #properties for limiting preview size in camera
 camera.display.umax=1920x1080
 camera.display.lmax=1280x720
