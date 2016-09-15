@@ -144,3 +144,7 @@ else
     PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
         ro.logdumpd.enabled=0
 endif
+
+#FEATURE_OPENGLES_EXTENSION_PACK support string config file
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml
