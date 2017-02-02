@@ -119,7 +119,7 @@ service qseecomd /system/bin/qseecomd
 #service aostlmd /system/bin/aostlmd
 #   class late_start
 #   user system
-#   group system net_raw
+#   group system
 
 service perfd /system/vendor/bin/perfd
    class main
