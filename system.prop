@@ -29,6 +29,8 @@ dev.pm.dyn_samplingrate=1
 persist.demo.hdmirotationlock=false
 debug.enable.sglscale=1
 
+debug.sf.nobootanimation=0
+persist.optimization.enable=false
 #ro.hdmi.enable=true
 #tunnel.decode=true
 #

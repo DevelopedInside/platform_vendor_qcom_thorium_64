@@ -4,7 +4,11 @@ TARGET_USES_QCOM_BSP := true
 #BOARD_HAVE_QCOM_FM := true
 # Add QC Video Enhancements flag
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
+#opti boot speed
+TARGET_ENABLE_OPTIMIZATION := false
+ifneq ($(strip $(TARGET_ENABLE_OPTIMIZATION)),true)
 TARGET_USES_NQ_NFC := true
+endif
 TARGET_KERNEL_VERSION := 3.18
 
 #QTIC flag
