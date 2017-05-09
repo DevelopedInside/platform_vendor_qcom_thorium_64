@@ -1,23 +1,23 @@
 TARGET_USES_AOSP := true
-TARGET_USES_AOSP_FOR_AUDIO := true
+TARGET_USES_AOSP_FOR_AUDIO := false
 TARGET_USES_QCOM_BSP := false
 
 ifeq ($(TARGET_USES_AOSP),true)
-TARGET_ENABLE_QC_AV_ENHANCEMENTS := false
 TARGET_DISABLE_DASH := true
 else
 DEVICE_PACKAGE_OVERLAYS := device/qcom/msm8937_64/overlay
-TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 endif
 
 #BOARD_HAVE_QCOM_FM := true
 TARGET_USES_NQ_NFC := false
 TARGET_KERNEL_VERSION := 3.18
 
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
+
 -include $(QCPATH)/common/config/qtic-config.mk
 
 # Enable features in video HAL that can compile only on this platform
-TARGET_USES_MEDIA_EXTENSIONS := false
+TARGET_USES_MEDIA_EXTENSIONS := true
 
 # media_profiles and media_codecs xmls for msm8937
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
@@ -94,22 +94,26 @@ PRODUCT_PACKAGES += libGLES_android
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml
 
+PRODUCT_PACKAGES += android.hardware.media.omx@1.0-impl
+
 #ANT+ stack
 PRODUCT_PACKAGES += \
     AntHalService \
     libantradio \
     antradio_app
 
-# Gralloc
-PRODUCT_PACKAGES += \
-   android.hardware.graphics.allocator@2.0-impl \
-    android.hardware.graphics.allocator@2.0-service \
-    android.hardware.graphics.mapper@2.0-impl
-
-# HW Composer
-PRODUCT_PACKAGES += \
-    android.hardware.graphics.composer@2.1-impl \
-    android.hardware.graphics.composer@2.1-service
+# Display/Graphics
+ PRODUCT_PACKAGES += \
+     android.hardware.graphics.allocator@2.0-impl \
+     android.hardware.graphics.allocator@2.0-service \
+     android.hardware.graphics.mapper@2.0-impl \
+     android.hardware.graphics.composer@2.1-impl \
+     android.hardware.graphics.composer@2.1-service \
+     android.hardware.memtrack@1.0-impl \
+     android.hardware.memtrack@1.0-service \
+     android.hardware.light@2.0-impl \
+     android.hardware.light@2.0-service \
+     android.hardware.configstore@1.0-service
 
 PRODUCT_PACKAGES += wcnss_service
 
@@ -152,6 +156,16 @@ PRODUCT_LOCALES += th_TH vi_VN tl_PH hi_IN ar_EG ru_RU tr_TR pt_BR bn_IN mr_IN t
 #PRODUCT_PACKAGE_OVERLAYS := $(QCPATH)/qrdplus/Extension/res \
         $(PRODUCT_PACKAGE_OVERLAYS)
 
+# Powerhint configuration file
+PRODUCT_COPY_FILES += \
+     device/qcom/msm8937_64/powerhint.xml:system/etc/powerhint.xml
+
+#Healthd packages
+PRODUCT_PACKAGES += android.hardware.health@1.0-impl \
+                   android.hardware.health@1.0-convert \
+                   android.hardware.health@1.0-service \
+                   libhealthd.msm
+
 #for android_filesystem_config.h
 PRODUCT_PACKAGES += \
     fs_config_files
@@ -184,6 +198,7 @@ PRODUCT_PACKAGES += \
 
 # Camera configuration file. Shared by passthrough/binderized camera HAL
 PRODUCT_PACKAGES += camera.device@3.2-impl
+PRODUCT_PACKAGES += camera.device@1.0-impl
 PRODUCT_PACKAGES += android.hardware.camera.provider@2.4-impl
 # Enable binderized camera HAL
 PRODUCT_PACKAGES += android.hardware.camera.provider@2.4-service
