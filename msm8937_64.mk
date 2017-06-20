@@ -8,6 +8,17 @@ else
 DEVICE_PACKAGE_OVERLAYS := device/qcom/msm8937_64/overlay
 endif
 
+# Default vendor configuration.
+ifeq ($(ENABLE_VENDOR_IMAGE),)
+ENABLE_VENDOR_IMAGE :=true
+endif
+
+# Disable QTIC until it's brought up in split system/vendor
+# configuration to avoid compilation breakage.
+ifeq ($(ENABLE_VENDOR_IMAGE), true)
+TARGET_USES_QTIC := false
+endif
+
 #BOARD_HAVE_QCOM_FM := true
 TARGET_USES_NQ_NFC := false
 TARGET_KERNEL_VERSION := 3.18
@@ -22,22 +33,21 @@ TARGET_USES_MEDIA_EXTENSIONS := true
 # media_profiles and media_codecs xmls for msm8937
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
 PRODUCT_COPY_FILES += device/qcom/msm8937_32/media/media_profiles_8937.xml:system/etc/media_profiles.xml \
+                      device/qcom/msm8937_32/media/media_profiles_8937.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles.xml \
                       device/qcom/msm8937_32/media/media_profiles_8956.xml:system/etc/media_profiles_8956.xml \
-                      device/qcom/msm8937_32/media/media_codecs_8937.xml:system/etc/media_codecs.xml \
-                      device/qcom/msm8937_32/media/media_codecs_8956.xml:system/etc/media_codecs_8956.xml \
-                      device/qcom/msm8937_32/media/media_codecs_performance_8937.xml:system/etc/media_codecs_performance.xml
+                      device/qcom/msm8937_32/media/media_profiles_8956.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_8956.xml \
+                      device/qcom/msm8937_32/media/media_codecs_8937.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
+                      device/qcom/msm8937_32/media/media_codecs_8956.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_8956.xml \
+                      device/qcom/msm8937_32/media/media_codecs_performance_8937.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance.xml
 endif
 
 PRODUCT_COPY_FILES += device/qcom/msm8937_64/whitelistedapps.xml:system/etc/whitelistedapps.xml \
                       device/qcom/msm8937_64/gamedwhitelist.xml:system/etc/gamedwhitelist.xml
 
 # video seccomp policy files
-# copy to system/vendor as well (since some devices may symlink to system/vendor and not create an actual partition for vendor)
 PRODUCT_COPY_FILES += \
-    device/qcom/msm8937_32/seccomp/mediacodec-seccomp.policy:vendor/etc/seccomp_policy/mediacodec.policy \
-    device/qcom/msm8937_32/seccomp/mediaextractor-seccomp.policy:vendor/etc/seccomp_policy/mediaextractor.policy \
-    device/qcom/msm8937_32/seccomp/mediacodec-seccomp.policy:system/vendor/etc/seccomp_policy/mediacodec.policy \
-    device/qcom/msm8937_32/seccomp/mediaextractor-seccomp.policy:system/vendor/etc/seccomp_policy/mediaextractor.policy
+    device/qcom/msm8937_32/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
+    device/qcom/msm8937_32/seccomp/mediaextractor-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
 
 PRODUCT_PROPERTY_OVERRIDES += \
            dalvik.vm.heapminfree=4m \
@@ -50,10 +60,10 @@ PRODUCT_DEVICE := msm8937_64
 PRODUCT_BRAND := Android
 PRODUCT_MODEL := msm8937 for arm64
 
-#PRODUCT_BOOT_JARS += tcmiface
+PRODUCT_BOOT_JARS += tcmiface
 
 ifneq ($(strip $(QCPATH)),)
-#PRODUCT_BOOT_JARS += WfdCommon
+PRODUCT_BOOT_JARS += WfdCommon
 #PRODUCT_BOOT_JARS += com.qti.dpmframework
 #PRODUCT_BOOT_JARS += dpmapi
 #PRODUCT_BOOT_JARS += com.qti.location.sdk
@@ -67,7 +77,7 @@ endif
 
 # add vendor manifest file
 PRODUCT_COPY_FILES += \
-    device/qcom/msm8937_64/vintf.xml:system/vendor/manifest.xml
+    device/qcom/msm8937_64/vintf.xml:$(TARGET_COPY_OUT_VENDOR)/manifest.xml
 
 # default is nosdcard, S/W button enabled in resource
 PRODUCT_CHARACTERISTICS := nosdcard
@@ -119,7 +129,7 @@ PRODUCT_PACKAGES += wcnss_service
 
 # MSM IRQ Balancer configuration file
 PRODUCT_COPY_FILES += \
-    device/qcom/msm8937_64/msm_irqbalance.conf:system/vendor/etc/msm_irqbalance.conf
+    device/qcom/msm8937_64/msm_irqbalance.conf:$(TARGET_COPY_OUT_VENDOR)/etc/msm_irqbalance.conf
 
 #wlan driver
 PRODUCT_COPY_FILES += \
@@ -176,6 +186,9 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_SUPPORTS_VERITY := true
 PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/bootdevice/by-name/system
+ifeq ($(ENABLE_VENDOR_IMAGE), true)
+PRODUCT_VENDOR_VERITY_PARTITION := /dev/block/bootdevice/by-name/vendor
+endif
 
 # Enable logdumpd service only for non-perf bootimage
 ifeq ($(findstring perf,$(KERNEL_DEFCONFIG)),)
