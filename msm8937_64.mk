@@ -16,7 +16,7 @@ endif
 # Disable QTIC until it's brought up in split system/vendor
 # configuration to avoid compilation breakage.
 ifeq ($(ENABLE_VENDOR_IMAGE), true)
-TARGET_USES_QTIC := false
+#TARGET_USES_QTIC := false
 endif
 
 #BOARD_HAVE_QCOM_FM := true
@@ -141,7 +141,10 @@ PRODUCT_PACKAGES += \
     wpa_supplicant_overlay.conf \
     p2p_supplicant_overlay.conf
 
-
+#for wlan
+PRODUCT_PACKAGES += \
+    wificond \
+    wifilogd
 # Feature definition files for msm8937
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
