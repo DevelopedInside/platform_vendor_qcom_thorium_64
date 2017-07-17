@@ -182,6 +182,8 @@ PRODUCT_PACKAGES += android.hardware.health@1.0-impl \
 
 PRODUCT_FULL_TREBLE_OVERRIDE := true
 
+PRODUCT_VENDOR_MOVE_ENABLED := true
+
 #for android_filesystem_config.h
 PRODUCT_PACKAGES += \
     fs_config_files
