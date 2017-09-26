@@ -80,6 +80,11 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input graphics
+    disabled
+on property:sys.earlycamera_finished=1
+   start qcamerasvr
+   restart cameraserver
+
 
 on init
    write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
@@ -119,7 +124,7 @@ service qseecomd /system/bin/qseecomd
 #service aostlmd /system/bin/aostlmd
 #   class late_start
 #   user system
-#   group system net_raw
+#   group system
 
 service perfd /system/vendor/bin/perfd
    class main
@@ -141,11 +146,6 @@ service thermal-engine /system/vendor/bin/thermal-engine
    socket thermal-recv-passive-client stream 0666 system system
    group root
 
-service time_daemon /system/bin/time_daemon
-   class late_start
-   user root
-   group root
-
 service audiod /system/bin/audiod
    class late_start
    user system
@@ -165,6 +165,13 @@ on boot
     chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
     chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
     chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
+
+    chmod 0666 /sys/class/earlycamera/earlycamera/earlycamera_status
+    chmod 0666 /sys/class/earlycamera/earlycamera/earlycamera_lk_notify_display_pause
+    chmod 0666 /sys/class/earlycamera/earlycamera/earlycamera_lk_notify_show_camera
+    chown system drmrpc /sys/class/earlycamera/earlycamera/earlycamera_status
+    chown graphics drmrpc /sys/class/earlycamera/earlycamera/earlycamera_lk_notify_display_pause
+    chown graphics drmrpc /sys/class/earlycamera/earlycamera/earlycamera_lk_notify_show_camera
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -209,7 +216,7 @@ service ims_rtp_daemon /system/bin/ims_rtp_daemon
 service imscmservice /system/bin/imscmservice
    class main
    user system
-   group radio net_raw diag diag log
+   group radio diag inet log
    disabled
 
 on property:sys.ims.DATA_DAEMON_STATUS=1

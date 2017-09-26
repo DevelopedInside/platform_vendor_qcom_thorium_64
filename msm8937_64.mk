@@ -4,7 +4,11 @@ TARGET_USES_QCOM_BSP := true
 #BOARD_HAVE_QCOM_FM := true
 # Add QC Video Enhancements flag
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
+#opti boot speed
+TARGET_ENABLE_OPTIMIZATION := false
+ifneq ($(strip $(TARGET_ENABLE_OPTIMIZATION)),true)
 TARGET_USES_NQ_NFC := true
+endif
 TARGET_KERNEL_VERSION := 3.18
 
 #QTIC flag
@@ -57,11 +61,11 @@ PRODUCT_CHARACTERISTICS := nosdcard
 
 # When can normal compile this module, need module owner enable below commands
 # font rendering engine feature switch
-#-include $(QCPATH)/common/config/rendering-engine.mk
-#ifneq (,$(strip $(wildcard $(PRODUCT_RENDERING_ENGINE_REVLIB))))
-#    MULTI_LANG_ENGINE := REVERIE
+-include $(QCPATH)/common/config/rendering-engine.mk
+ifneq (,$(strip $(wildcard $(PRODUCT_RENDERING_ENGINE_REVLIB))))
+    MULTI_LANG_ENGINE := REVERIE
 #    MULTI_LANG_ZAWGYI := REVERIE
-#endif
+endif
 
 
 
@@ -116,10 +120,8 @@ PRODUCT_LOCALES += th_TH vi_VN tl_PH hi_IN ar_EG ru_RU tr_TR pt_BR bn_IN mr_IN t
 
 # When can normal compile this module, need module owner enable below commands
 # Add the overlay path
-#PRODUCT_PACKAGE_OVERLAYS := $(QCPATH)/qrdplus/Extension/res \
-#        $(QCPATH)/qrdplus/globalization/multi-language/res-overlay \
-#        $(PRODUCT_PACKAGE_OVERLAYS)
 PRODUCT_PACKAGE_OVERLAYS := $(QCPATH)/qrdplus/Extension/res \
+        $(QCPATH)/qrdplus/globalization/multi-language/res-overlay \
         $(PRODUCT_PACKAGE_OVERLAYS)
 
 #for android_filesystem_config.h
